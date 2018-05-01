@@ -5,7 +5,8 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Authors>Trevor Tubbs</Authors>
-    <Description />
+    <Description>A simple factory library for instantiating objects.</Description>
+    <RepositoryUrl>https://github.com/TrevorTubbs/factory</RepositoryUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
