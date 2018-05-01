@@ -27,5 +27,20 @@ namespace tt.factory.tests {
             Assert.IsInstanceOfType(actual, implementationType, "The instance is not the expected type.");
             Assert.AreEqual(name, actual.Name, "Name");
         }
+
+        [DataRow("Sally", 21, typeof(Woman))]
+        [DataRow("Sally", 18, typeof(Woman))]
+        [DataRow("Sally", 15, typeof(TeenGirl))]
+        [DataTestMethod]
+        public void CreateAgeInstance(string name, int age, Type implementationType) {
+            IAge actual;
+
+            actual = Factory.Create<IAge>(new Dictionary<string, object>() { { "Name", name }, { "Age", age } });
+
+            Assert.IsNotNull(actual, "An instance of the type should have been created.");
+            Assert.IsInstanceOfType(actual, implementationType, "The instance is not the expected type.");
+            Assert.AreEqual(age, actual.Age, "Age");
+            Assert.AreEqual(name, ((IName)actual).Name, "Name");
+        }
     }
 }

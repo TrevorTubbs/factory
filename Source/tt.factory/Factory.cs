@@ -53,6 +53,9 @@ namespace tt.factory {
 
         private static T CreateFromType<T>(Type type, Dictionary<string, object> properties) where T : class {
             var c = type.GetConstructor(new Type[0]);
+            if (c == null) {
+                return null;
+            }
 
             int expectedAssignments = properties?.Count ?? 0;
             List<Tuple<PropertyInfo, object>> assignments = null;
@@ -87,7 +90,15 @@ namespace tt.factory {
             var attributes = property.GetCustomAttributes<PropertyDefinitionAttribute>();
             if (attributes != null) {
                 foreach (PropertyDefinitionAttribute attribute in attributes) {
-                    if ((value == null && attribute.Value == null) || (value != null && attribute.Value != null && value.Equals(attribute.Value))) {
+                    if (!string.IsNullOrWhiteSpace(attribute.ValidationFunction)) {
+                        var validation = property.ReflectedType.GetMethod(attribute.ValidationFunction, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic, null, new[] { property.PropertyType }, null);
+                        if (validation != null && validation.IsStatic && validation.ReturnType == typeof(bool)) {
+                            try {
+                                return (bool)validation.Invoke(null, new[] { value });
+                            } catch { } // Return false if not other options are successful.
+                        }
+                    }
+                    else if ((value == null && attribute.Value == null) || (value != null && attribute.Value != null && value.Equals(attribute.Value))) {
                         return true;
                     }
                 }
