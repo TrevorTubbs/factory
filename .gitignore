@@ -1,0 +1,14 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/Source/.vs
+/Source/packages
+/Source/task.factory/bin/Debug/netstandard2.0
+/Source/task.factory/obj
+/Source/task.factory.tests/bin/Debug
+/Source/task.factory.tests/obj/Debug
+/Source/tt.factory/bin/Debug/netstandard2.0
+/Source/tt.factory/obj
+/Source/tt.factory.tests/bin/Debug
+/Source/tt.factory.tests/obj/Debug
