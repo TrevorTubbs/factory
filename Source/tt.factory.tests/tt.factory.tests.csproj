@@ -49,10 +49,14 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Mocks\CorporateEmployee.cs" />
     <Compile Include="Mocks\GirlName.cs" />
     <Compile Include="Mocks\IAge.cs" />
     <Compile Include="Mocks\IName.cs" />
     <Compile Include="Mocks\BoyName.cs" />
+    <Compile Include="Mocks\INicknameFlag.cs" />
+    <Compile Include="Mocks\Man.cs" />
+    <Compile Include="Mocks\TeenBoy.cs" />
     <Compile Include="Mocks\TeenGirl.cs" />
     <Compile Include="Mocks\Woman.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

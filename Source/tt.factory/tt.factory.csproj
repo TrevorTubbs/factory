@@ -9,6 +9,7 @@
     <RepositoryUrl>https://github.com/TrevorTubbs/factory</RepositoryUrl>
     <Product>Simple Factory</Product>
     <Title>tt.factory</Title>
+    <Version>1.1.0</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

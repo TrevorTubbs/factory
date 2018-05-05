@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Reflection;
-
 using System.Collections.Generic;
 
 namespace tt.factory {
@@ -14,9 +13,17 @@ namespace tt.factory {
         /// <typeparam name="T">The type to create.</typeparam>
         /// <param name="properties">The properties to set.</param>
         public static T Create<T>(Dictionary<string, object> properties = null) where T : class {
+            return Create<T>(properties != null ? new TypePreferences() { Properties = properties } : null);
+        }
+        /// <summary>
+        /// Creates an instance of the specified type.
+        /// </summary>
+        /// <typeparam name="T">The type to create.</typeparam>
+        /// <param name="preferences">Preferences to use in selecting a type to create.</param>
+        public static T Create<T>(TypePreferences preferences) where T : class {
             T rtn = null;
             foreach (Assembly a in AppDomain.CurrentDomain.GetAssemblies()) {
-                rtn = Create<T>(a, properties);
+                rtn = Create<T>(a, preferences);
                 if (rtn != null)
                     return rtn;
             }
@@ -30,7 +37,16 @@ namespace tt.factory {
         /// <param name="assembly">The assmblies to search.</param>
         /// <param name="properties">The properties to set.</param>
         public static T Create<T>(Assembly assembly, Dictionary<string, object> properties = null) where T : class {
-            return Create<T>(assembly.GetTypes(), properties);
+            return Create<T>(assembly, properties != null ? new TypePreferences() { Properties = properties } : null);
+        }
+        /// <summary>
+        /// Creates an instance of the specified type.
+        /// </summary>
+        /// <typeparam name="T">The type to create.</typeparam>
+        /// <param name="assembly">The assmblies to search.</param>
+        /// <param name="preferences">Preferences to use in selecting a type to create.</param>
+        public static T Create<T>(Assembly assembly, TypePreferences preferences) where T : class {
+            return Create<T>(assembly.GetTypes(), preferences);
         }
         /// <summary>
         /// Creates an instance of the specified type.
@@ -39,11 +55,25 @@ namespace tt.factory {
         /// <param name="types">The types to search.</param>
         /// <param name="properties">The properties to set.</param>
         public static T Create<T>(Type[] types, Dictionary<string, object> properties = null) where T : class {
+            return Create<T>(types, preferences: null);
+        }
+        /// <summary>
+        /// Creates an instance of the specified type.
+        /// </summary>
+        /// <typeparam name="T">The type to create.</typeparam>
+        /// <param name="types">The types to search.</param>
+        /// <param name="preferences">Preferences to use in selecting a type to create.</param>
+        public static T Create<T>(Type[] types, TypePreferences preferences) where T : class {
             foreach (Type t in types) {
-                if (typeof(T).IsAssignableFrom(t) && t.GetCustomAttribute<ClassDefinitionAttribute>() != null) {
-                    T rtn = CreateFromType<T>(t, properties);
-                    if (rtn != null) {
-                        return rtn;
+                var definitions = t.GetCustomAttributes<ClassDefinitionAttribute>();
+                if (definitions != null) {
+                    foreach (ClassDefinitionAttribute definition in definitions) {
+                        if (typeof(T).IsAssignableFrom(t) && string.Compare(preferences.Code, definition.Code, StringComparison.CurrentCultureIgnoreCase) == 0) {
+                            T rtn = CreateFromType<T>(t, preferences);
+                            if (rtn != null) {
+                                return rtn;
+                            }
+                        }
                     }
                 }
             }
@@ -51,23 +81,23 @@ namespace tt.factory {
             return null;
         }
 
-        private static T CreateFromType<T>(Type type, Dictionary<string, object> properties) where T : class {
+        private static T CreateFromType<T>(Type type, TypePreferences preferences) where T : class {
             var c = type.GetConstructor(new Type[0]);
             if (c == null) {
                 return null;
             }
 
-            int expectedAssignments = properties?.Count ?? 0;
+            int expectedAssignments = preferences?.Properties?.Count ?? 0;
             List<Tuple<PropertyInfo, object>> assignments = null;
-            if (properties != null) {
-                var propertyNames = properties.Keys;
+            if (preferences?.Properties != null) {
+                var propertyNames = preferences.Properties.Keys;
                 foreach (string propertyName in propertyNames) {
                     var property = type.GetProperty(propertyName);
-                    if (property != null && PropertyAllowsValue(property, properties[propertyName])) {
+                    if (property != null && PropertyAllowsValue(property, preferences.Properties[propertyName])) {
                         if (assignments == null) {
                             assignments = new List<Tuple<PropertyInfo, object>>();
                         }
-                        assignments.Add(new Tuple<PropertyInfo, object>(property, properties[propertyName]));
+                        assignments.Add(new Tuple<PropertyInfo, object>(property, preferences.Properties[propertyName]));
                     }
                 }
             }
@@ -87,6 +117,11 @@ namespace tt.factory {
         }
 
         private static bool PropertyAllowsValue(PropertyInfo property, object value) {
+            if ((value == null && property.PropertyType.IsValueType) || 
+                (value != null && !property.PropertyType.IsAssignableFrom(value.GetType()))) {
+                return false;
+            }
+
             var attributes = property.GetCustomAttributes<PropertyDefinitionAttribute>();
             if (attributes != null) {
                 foreach (PropertyDefinitionAttribute attribute in attributes) {
@@ -95,10 +130,10 @@ namespace tt.factory {
                         if (validation != null && validation.IsStatic && validation.ReturnType == typeof(bool)) {
                             try {
                                 return (bool)validation.Invoke(null, new[] { value });
-                            } catch { } // Return false if not other options are successful.
+                            } catch { } // Return false if no other options are successful.
                         }
                     }
-                    else if ((value == null && attribute.Value == null) || (value != null && attribute.Value != null && value.Equals(attribute.Value))) {
+                    else if (attribute.Value == null || (attribute.Value != null && attribute.Value.Equals(value))) {
                         return true;
                     }
                 }
