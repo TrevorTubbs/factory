@@ -1,5 +1,5 @@
-*How does the factory find to instantiate?*
-Add the ClassDefinitionAttribute to any class you want to be available to the factory. Use the Code property to add an additional restriction to types that will be selected by the factory. If the Code property is set the factory will only instantiate it for clients that provide the code. The code is not case sensitive.
+*How does the factory find a type to instantiate?*
+Add the ClassDefinitionAttribute to any class you want to be available to the factory. Use an instance of TypePreferences to specify type requirements. If the Code property is set the factory will only instantiate it for clients that provide the code. The code is not case sensitive. The dictionary of properties will be used to find a type with corresponding properties that allows the values you have specified in the dictionary.
 
 *How do I use the factory to create an instance of an object?*
 The generic parameter designates the type of object to create. It does not need to be a concrete type. The dictionary provides key-value pairs corresponding to properties on the object.
@@ -16,3 +16,9 @@ There are two properties on PropertyDefinitionAttribute; ValidationFunction and 
  A function to determine if a value is valid for the property. The function must take the proposed value as an argument and return a boolean. If the function returns true, the value is considered a valid value for the property. The function must be defined in the class. It does not need to be public. It must be static.
 - Value
 A valid value.
+
+*How do I create a type that is defined in an assembly that isn't loaded in memory?*
+Use the overload that takes an instance of TypePreferences. Add the path of each directory you would like to search to the SearchPaths list. If a matching type is not found in the assemblies that are loaded then these paths will be used to find a matching type.
+
+*Repository*
+https://github.com/TrevorTubbs/factory

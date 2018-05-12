@@ -105,5 +105,17 @@ namespace tt.factory.tests {
             Assert.IsInstanceOfType(actual, implementationType, "The instance is not the expected type.");
             Assert.AreEqual(nickname, ((INicknameFlag)actual).Nickname, "Nickname");
         }
+
+        [TestMethod]
+        public void CreateFindsTypeInReferencedAssemblyThatHasNotBeenLoaded() {
+            object actual;
+
+            actual = Factory.Create<object>(new TypePreferences() {
+                Code = "HiddenType",
+                SearchPaths = new List<string>() { AppDomain.CurrentDomain.BaseDirectory }
+            });
+
+            Assert.IsNotNull(actual, "An instance of the type should have been created.");
+        }
     }
 }

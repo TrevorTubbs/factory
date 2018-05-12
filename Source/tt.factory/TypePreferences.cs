@@ -14,5 +14,10 @@ namespace tt.factory {
         /// The properties to set on the newly created instance of the selected type.
         /// </summary>
         public Dictionary<string, object> Properties { get; set; }
+
+        /// <summary>
+        /// Paths to search for assemblies with matching types.
+        /// </summary>
+        public List<string> SearchPaths { get; set; }
     }
 }

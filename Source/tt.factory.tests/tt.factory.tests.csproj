@@ -66,6 +66,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ReferencedButNotLoaded\ReferencedButNotLoaded.csproj">
+      <Project>{206ef43e-a37a-48bb-b8de-c2be3ac33932}</Project>
+      <Name>ReferencedButNotLoaded</Name>
+    </ProjectReference>
     <ProjectReference Include="..\tt.factory\tt.factory.csproj">
       <Project>{f0f16ba6-287b-420c-bb81-f89823a3e716}</Project>
       <Name>task.factory</Name>

@@ -12,8 +12,10 @@
 /Source/tt.factory/obj
 /Source/tt.factory.tests/bin/Debug
 /Source/tt.factory.tests/obj/Debug
-/Source/tt.factory/bin/Debug/tt.factory.1.0.0.nupkg
+*.nupkg
 /Source/tt.factory/bin/Release
 /Source/tt.factory.tests/bin/Release
 *.user
 /Source/tt.factory.tests/obj/Release
+/Source/ReferencedButNotLoaded/bin
+/Source/ReferencedButNotLoaded/obj

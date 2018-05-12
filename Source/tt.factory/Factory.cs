@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Reflection;
 using System.Collections.Generic;
+using System.Linq;
+using System.IO;
 
 namespace tt.factory {
     /// <summary>
@@ -22,10 +24,24 @@ namespace tt.factory {
         /// <param name="preferences">Preferences to use in selecting a type to create.</param>
         public static T Create<T>(TypePreferences preferences) where T : class {
             T rtn = null;
-            foreach (Assembly a in AppDomain.CurrentDomain.GetAssemblies()) {
-                rtn = Create<T>(a, preferences);
+            foreach (Assembly assembly in from a in AppDomain.CurrentDomain.GetAssemblies() select a) {
+                rtn = Create<T>(assembly, preferences);
                 if (rtn != null)
                     return rtn;
+            }
+            
+            if (preferences?.SearchPaths != null && preferences.SearchPaths.Count > 0) {
+                var loadedFileNames = from a in AppDomain.CurrentDomain.GetAssemblies() select a.Location;
+                foreach (string path in from p in preferences.SearchPaths.Distinct() where !string.IsNullOrWhiteSpace(p) select p) {
+                    var fileNames = from n in Directory.GetFiles(path, "*.dll") where !loadedFileNames.Contains(n) select n;
+                    if (fileNames != null) {
+                        foreach (string fileName in fileNames) {
+                            rtn = Create<T>(Assembly.LoadFile(fileName), preferences);
+                            if (rtn != null)
+                                return rtn;
+                        }
+                    }
+                }
             }
 
             return null;
