@@ -49,13 +49,16 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Mocks\Connection.cs" />
     <Compile Include="Mocks\CorporateEmployee.cs" />
     <Compile Include="Mocks\GirlName.cs" />
     <Compile Include="Mocks\IAge.cs" />
+    <Compile Include="Mocks\ImplementedObject.cs" />
     <Compile Include="Mocks\IName.cs" />
     <Compile Include="Mocks\BoyName.cs" />
     <Compile Include="Mocks\INicknameFlag.cs" />
     <Compile Include="Mocks\Man.cs" />
+    <Compile Include="Mocks\NamedIdentifier.cs" />
     <Compile Include="Mocks\TeenBoy.cs" />
     <Compile Include="Mocks\TeenGirl.cs" />
     <Compile Include="Mocks\Woman.cs" />
@@ -69,6 +72,10 @@
     <ProjectReference Include="..\ReferencedButNotLoaded\ReferencedButNotLoaded.csproj">
       <Project>{206ef43e-a37a-48bb-b8de-c2be3ac33932}</Project>
       <Name>ReferencedButNotLoaded</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\tt.factory.tests.resources\tt.factory.tests.resources.csproj">
+      <Project>{7cd9c99d-7357-473c-92d7-619e1c0fe139}</Project>
+      <Name>tt.factory.tests.resources</Name>
     </ProjectReference>
     <ProjectReference Include="..\tt.factory\tt.factory.csproj">
       <Project>{f0f16ba6-287b-420c-bb81-f89823a3e716}</Project>

@@ -1,10 +1,11 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using tt.factory.tests.Mocks;
 using System.Collections.Generic;
+using tt.factory.tests.Mocks;
+using tt.factory.tests.resources;
 
 namespace tt.factory.tests {
-    [TestClass]
+	[TestClass]
     public class FactoryTests {
         [TestMethod]
         public void CreateReturnsNullWhenNoTypeDefined() {
@@ -117,5 +118,32 @@ namespace tt.factory.tests {
 
             Assert.IsNotNull(actual, "An instance of the type should have been created.");
         }
-    }
+
+		[TestMethod]
+		public void CreateFindsTypeWithInterfaceDefinedAcrossAssemblyBoundaries() {
+			INamedIdentifier actual;
+
+			actual = Factory.Create<INamedIdentifier>();
+
+			Assert.IsNotNull(actual, "An instance of the type should have been created.");
+		}
+
+		[TestMethod]
+		public void CreateFindsTypeWithAbstractClassDefinedAcrossAssemblyBoundaries() {
+			AbstractConnection actual;
+
+			actual = Factory.Create<AbstractConnection>();
+
+			Assert.IsNotNull(actual, "An instance of the type should have been created.");
+		}
+
+		[TestMethod]
+		public void CreateFindsTypeWithBaseClassDefinedAcrossAssemblyBoundaries() {
+			BaseObject actual;
+
+			actual = Factory.Create<BaseObject>();
+
+			Assert.IsNotNull(actual, "An instance of the type should have been created.");
+		}
+	}
 }

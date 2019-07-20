@@ -84,7 +84,7 @@ namespace tt.factory {
                 var definitions = t.GetCustomAttributes<ClassDefinitionAttribute>();
                 if (definitions != null) {
                     foreach (ClassDefinitionAttribute definition in definitions) {
-                        if (typeof(T).IsAssignableFrom(t) && string.Compare(preferences.Code, definition.Code, StringComparison.CurrentCultureIgnoreCase) == 0) {
+                        if (typeof(T).IsAssignableFrom(t) && string.Compare(preferences?.Code, definition.Code, StringComparison.CurrentCultureIgnoreCase) == 0) {
                             T rtn = CreateFromType<T>(t, preferences);
                             if (rtn != null) {
                                 return rtn;
