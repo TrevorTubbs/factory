@@ -31,7 +31,7 @@ namespace tt.factory {
             }
             
             if (preferences?.SearchPaths != null && preferences.SearchPaths.Count > 0) {
-                var loadedFileNames = from a in AppDomain.CurrentDomain.GetAssemblies() select a.Location;
+                var loadedFileNames = from a in AppDomain.CurrentDomain.GetAssemblies() where !a.IsDynamic select a.Location;
                 foreach (string path in from p in preferences.SearchPaths.Distinct() where !string.IsNullOrWhiteSpace(p) select p) {
                     var fileNames = from n in Directory.GetFiles(path, "*.dll") where !loadedFileNames.Contains(n) select n;
                     if (fileNames != null) {
@@ -62,7 +62,17 @@ namespace tt.factory {
         /// <param name="assembly">The assmblies to search.</param>
         /// <param name="preferences">Preferences to use in selecting a type to create.</param>
         public static T Create<T>(Assembly assembly, TypePreferences preferences) where T : class {
-            return Create<T>(assembly.GetTypes(), preferences);
+			Type[] types;
+			try {
+				types = assembly.GetTypes();
+			} catch {
+				try {
+					types = assembly.GetExportedTypes();
+				} catch {
+					types = Array.Empty<Type>();
+				}
+			}
+			return Create<T>(types, preferences);
         }
         /// <summary>
         /// Creates an instance of the specified type.
@@ -71,7 +81,7 @@ namespace tt.factory {
         /// <param name="types">The types to search.</param>
         /// <param name="properties">The properties to set.</param>
         public static T Create<T>(Type[] types, Dictionary<string, object> properties = null) where T : class {
-            return Create<T>(types, preferences: null);
+            return Create<T>(types, properties != null ? new TypePreferences() { Properties = properties } : null);
         }
         /// <summary>
         /// Creates an instance of the specified type.

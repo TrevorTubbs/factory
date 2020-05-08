@@ -4,20 +4,7 @@
 
 /Source/.vs
 /Source/packages
-/Source/task.factory/bin/Debug/netstandard2.0
-/Source/task.factory/obj
-/Source/task.factory.tests/bin/Debug
-/Source/task.factory.tests/obj/Debug
-/Source/tt.factory/bin/Debug/netstandard2.0
-/Source/tt.factory/obj
-/Source/tt.factory.tests/bin/Debug
-/Source/tt.factory.tests/obj/Debug
 *.nupkg
-/Source/tt.factory/bin/Release
-/Source/tt.factory.tests/bin/Release
 *.user
-/Source/tt.factory.tests/obj/Release
-/Source/ReferencedButNotLoaded/bin
-/Source/ReferencedButNotLoaded/obj
-/Source/tt.factory.tests.resources/bin
-/Source/tt.factory.tests.resources/obj
+**/bin/**
+**/obj/**
